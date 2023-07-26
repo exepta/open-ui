@@ -1,3 +1,2 @@
-"ui-logic","THREADED","THREADED, SINGLE, POOLS, MULTI_RENDERERS","enum","Select the logic mode of your application"
 gl-version,auto,"auto, 3.2 - 4.6",string,Select the to use opengl version auto means 4.6 or 3.2 by newer and older graphic cards
 nvg-version,3,"3, 2",int,Select the NanoVG version only version 2 and 3 can be used. Note gl-version will override by this!

@@ -150,9 +150,6 @@ public final class OpenUI {
             String value = split[1];
 
             switch (key) {
-                case "ui-logic" -> {
-                    options.setLogic(value);
-                }
                 case "gl-version" -> {
                     options.setOpenglVersion(value);
                 }
