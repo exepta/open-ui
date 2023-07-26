@@ -4,6 +4,7 @@ import net.exsource.open.annotation.AnnotationProcessor;
 import net.exsource.open.annotation.start.Initialization;
 import net.exsource.open.annotation.start.PostInitialization;
 import net.exsource.open.annotation.start.PreInitialisation;
+import net.exsource.open.enums.Errors;
 import net.exsource.openlogger.Logger;
 import net.exsource.openlogger.level.LogLevel;
 import net.exsource.openlogger.util.ConsoleColor;
@@ -47,7 +48,7 @@ public final class OpenUI {
         Class<?> mainClass = getMainClass();
         if(mainClass == null) {
             logger.fatal("Stopping executing OpenUI in unknown class... see the logs for more information");
-            ErrorHandler.handle(ErrorHandler.Code.NO_MAIN);
+            ErrorHandler.handle(Errors.NO_MAIN);
             return;
         }
         logger.info("Launch OpenUI for " + mainClass.getSimpleName() + "...");
@@ -56,7 +57,7 @@ public final class OpenUI {
         AnnotationProcessor.invoke(mainClass, PreInitialisation.class);
         if(!GLFW.glfwInit()) {
             logger.fatal("Can't initialize GLFW in thread [ " + Thread.currentThread().getName() + " ]");
-            ErrorHandler.handle(ErrorHandler.Code.GLFW_INIT);
+            ErrorHandler.handle(Errors.GLFW_INIT);
             return;
         }
         logger.info("Initialize GLFW successfully in thread [ " + Thread.currentThread().getName() + " ]");
@@ -158,6 +159,13 @@ public final class OpenUI {
                         options.setNanoVGVersion(Integer.parseInt(value));
                     } catch (NumberFormatException exception) {
                         options.setNanoVGVersion(3);
+                    }
+                }
+                case "max-threads" -> {
+                    try  {
+                        options.setMaxThreads(Integer.parseInt(value));
+                    } catch (NumberFormatException exception) {
+                        options.setMaxThreads(5);
                     }
                 }
                 default -> {
