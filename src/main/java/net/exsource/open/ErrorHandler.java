@@ -43,6 +43,7 @@ public final class ErrorHandler {
     public enum Code {
         UNKNOWN(-1, false, "There was an unexpected error!"),
         NO_MAIN(14136, true, "There was no main located by execution try of OpenUI!"),
+        WINDOW_GENERATION_FAILED(2376, true, "There was a generation error by try to generate a new window!"),
         GLFW_INIT(739, true, "There was no glfw context in the current thread or it can't be initialize glfw!");
 
         private final int id;
