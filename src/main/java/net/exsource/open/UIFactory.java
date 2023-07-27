@@ -1,6 +1,7 @@
 package net.exsource.open;
 
 import net.exsource.open.ui.UIWindow;
+import net.exsource.open.ui.font.Font;
 import net.exsource.open.ui.windows.Window;
 import net.exsource.openlogger.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +32,8 @@ public final class UIFactory {
 
     private static final Map<String, UIWindow> windows = new HashMap<>();
     private static final Map<String, Thread> threads = new HashMap<>();
+
+    private static final List<Font> fonts = new ArrayList<>();
 
     /* ########################################################################
      *
@@ -307,5 +310,64 @@ public final class UIFactory {
      */
     public static Map<String, Thread> getThreads() {
         return threads;
+    }
+
+    /* ########################################################################
+     *
+     *                             Assets/Handle
+     *
+     * ######################################################################## */
+
+    public static void registerFont(@NotNull Font font) {
+        if(hasFont(font)) {
+            logger.warn("Font " + font.getName() + ", already loaded!");
+            return;
+        }
+        logger.debug("Font " + font.getName() + ", successfully registered!");
+        fonts.add(font);
+    }
+
+    public static void unregisterAllFonts() {
+        fonts.clear();
+    }
+
+    public static void unregisterFont(@NotNull Font font) {
+        unregisterFont(font.getName());
+    }
+
+    public static void unregisterFont(@NotNull String name) {
+        if(!hasFont(name)) {
+            logger.warn("Font " + name + ", is not loaded or registered!");
+            return;
+        }
+        logger.debug("Font " + name + ", successfully unregistered!");
+        fonts.remove(getFont(name));
+    }
+
+    public static boolean hasFont(@NotNull Font font) {
+        return hasFont(font.getName());
+    }
+
+    public static boolean hasFont(@NotNull String name) {
+        return getFont(name) != null;
+    }
+
+    public static Font getFont(@NotNull String name) {
+        Font font = getFallbackFont();
+        for(Font entries : fonts) {
+            if(entries.getName().equals(name)) {
+                font = entries;
+                break;
+            }
+        }
+        return font;
+    }
+
+    public static Font getFallbackFont() {
+        return Font.FALLBACK;
+    }
+
+    public static List<Font> getFonts() {
+        return fonts;
     }
 }
