@@ -1,6 +1,7 @@
 package net.exsource.open.ui;
 
 import net.exsource.open.ErrorHandler;
+import net.exsource.open.OpenUI;
 import net.exsource.open.UIFactory;
 import net.exsource.open.enums.Errors;
 import net.exsource.open.events.windows.WindowCloseEvent;
@@ -23,6 +24,7 @@ import net.exsource.openutils.tools.Color;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.nanovg.NanoVGGL2;
 import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -400,7 +402,16 @@ public abstract class UIWindow implements ResizeAble {
      */
     protected void defaultConfigure() {
         GLCapabilities capabilities = GL.createCapabilities();
-        long nvgID = NanoVGGL3.nvgCreate(NanoVGGL3.NVG_STENCIL_STROKES | NanoVGGL3.NVG_ANTIALIAS);
+        long nvgID;
+        if(OpenUI.getOptions().getNanoVGVersion() == 3)
+            nvgID = NanoVGGL3.nvgCreate(NanoVGGL3.NVG_STENCIL_STROKES | NanoVGGL3.NVG_ANTIALIAS);
+        else
+            nvgID = NanoVGGL2.nvgCreate(NanoVGGL2.NVG_STENCIL_STROKES | NanoVGGL2.NVG_ANTIALIAS);
+
+        if(nvgID <= NULL) {
+            ErrorHandler.handle(Errors.WINDOW_NOT_CONTAINS_NVG);
+            return;
+        }
         this.context = new Context(openglID, nvgID, capabilities);
 
         logger.debug("Crating context for " + getIdentifier());
