@@ -1,7 +1,6 @@
 package net.exsource.open.ui;
 
 import net.exsource.open.ErrorHandler;
-import net.exsource.open.OpenUI;
 import net.exsource.open.UIFactory;
 import net.exsource.open.enums.Errors;
 import net.exsource.open.events.windows.WindowCloseEvent;
@@ -52,7 +51,7 @@ import static net.exsource.open.logic.callback.Callbacks.*;
  * @see Thread
  * @author Daniel Ramke
  */
-public abstract class UIWindow {
+public abstract class UIWindow implements ResizeAble {
 
     private static final Logger logger = Logger.getLogger();
 
@@ -63,7 +62,7 @@ public abstract class UIWindow {
     private final Thread thread;
 
     private final String identifier;
-    private long openglID;
+    protected long openglID;
 
     protected Context context;
 
@@ -190,14 +189,14 @@ public abstract class UIWindow {
      * ######################################################################## */
 
     /**
-     * @return String - window named identifier, a readable name for humans.
+     * @return {@link String} - window named identifier, a readable name for humans.
      */
     public String getIdentifier() {
         return identifier;
     }
 
     /**
-     * @return long - from glfw created id for the window, is better for the machine to read.
+     * @return {@link Long} - from glfw created id for the window, is better for the machine to read.
      */
     public long getOpenglID() {
         _wait();
@@ -205,27 +204,31 @@ public abstract class UIWindow {
     }
 
     /**
-     * @return Context - the context archive contains openglID, nvgID and GLCapabilities.
+     * @return {@link Context} - the context archive contains openglID, nvgID and GLCapabilities.
      */
     public Context getContext() {
         return context;
     }
 
     /**
-     * @return Thread - the java thread which is holding the current window.
+     * @return {@link Thread} - the java thread which is holding the current window.
      */
     public Thread getThread() {
         return thread;
     }
 
     /**
-     * @return String - window type is {@link Class#getSimpleName()} because the name of class ar the type.
+     * @return {@link String} - window type is {@link Class#getSimpleName()} because the name of class ar the type.
      */
     public String getType() {
         return getClass().getSimpleName();
     }
 
-    //ToDo: include better function.
+    /**
+     * Function to set a new title for the current window.
+     * This function is simple called {@link GLFW#glfwSetWindowTitle(long, ByteBuffer)}.
+     * @param title the wish title.
+     */
     public void setTitle(String title) {
         if(title == null) {
             title = getClass().getSimpleName();
@@ -235,14 +238,14 @@ public abstract class UIWindow {
     }
 
     /**
-     * @return String - the current using title from the window.
+     * @return {@link String} - the current using title from the window.
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     * @return boolean - true if the window was created by {@link #build()}.
+     * @return {@link Boolean} - true if the window was created by {@link #build()}.
      */
     public boolean isCreated() {
         _wait();
@@ -260,30 +263,38 @@ public abstract class UIWindow {
     }
 
     /**
-     * @return boolean - state of window vsync.
+     * @return {@link Boolean} - state of window vsync.
      */
     public boolean isVsync() {
         _wait();
         return vsync;
     }
 
+    /**
+     * Function to change the current width.
+     * @param width the new width as {@link Integer}
+     */
     public void setWidth(int width) {
         this.width = width;
     }
 
     /**
-     * @return int - the current window width.
+     * @return {@link Integer} - the current window width.
      */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * Function to change the current height.
+     * @param height the new height as {@link Integer}
+     */
     public void setHeight(int height) {
         this.height = height;
     }
 
     /**
-     * @return int - the current window height.
+     * @return {@link Integer} - the current window height.
      */
     public int getHeight() {
         return height;
@@ -482,7 +493,7 @@ public abstract class UIWindow {
     /**
      * Function checks if a {@link Renderer} exist in the window or not.
      * @param renderer the renderer as identifier.
-     * @return boolean - true if the renderer was found.
+     * @return {@link Boolean} - true if the renderer was found.
      * @see Renderer
      */
     public boolean hasRenderer(@NotNull Renderer renderer) {
@@ -492,7 +503,7 @@ public abstract class UIWindow {
     /**
      * Function checks if a {@link Renderer} exist in the window or not.
      * @param name the renderer name as identifier.
-     * @return boolean - true if the renderer was found.
+     * @return {@link Boolean} - true if the renderer was found.
      * @see Renderer
      */
     public boolean hasRenderer(@NotNull String name) {
@@ -504,7 +515,7 @@ public abstract class UIWindow {
      * renderer parameter. If the renderer was found it will return this renderer.
      * The return value can be null if the renderer wasn't found.
      * @param renderer the renderer as identifier.
-     * @return Renderer - the founded renderer object.
+     * @return {@link Renderer} - the founded renderer object.
      * @see Renderer
      */
     public Renderer getRenderer(@NotNull Renderer renderer) {
@@ -516,7 +527,7 @@ public abstract class UIWindow {
      * name parameter. If the renderer was found it will return this renderer.
      * The return value can be null if the renderer wasn't found.
      * @param name the renderer name as identifier.
-     * @return Renderer - the founded renderer object.
+     * @return {@link Renderer} - the founded renderer object.
      * @see Renderer
      */
     public Renderer getRenderer(@NotNull String name) {
@@ -530,7 +541,7 @@ public abstract class UIWindow {
     }
 
     /**
-     * @return List<Renderer> - all known renderers for this window.
+     * @return {@link List} - all known renderers for this window.
      */
     public List<Renderer> getRenderers() {
         return renderers;
@@ -598,7 +609,7 @@ public abstract class UIWindow {
     /**
      * Function checks the {@link #getComponents()} list for a specified {@link Component} by itself as object.
      * @param component the {@link Component} need to be used.
-     * @return boolean - true if it was found in the list.
+     * @return {@link Boolean} - true if it was found in the list.
      * @see Component
      */
     public boolean hasComponent(@NotNull Component component) {
@@ -608,7 +619,7 @@ public abstract class UIWindow {
     /**
      * Function checks the {@link #getComponents()} list for a specified {@link Component} by ID.
      * @param ID the {@link Component#getLocalizedName()} need to be used.
-     * @return boolean - true if it was found in the list.
+     * @return {@link Boolean} - true if it was found in the list.
      * @see Component
      */
     public boolean hasComponent(@NotNull String ID) {
@@ -620,7 +631,7 @@ public abstract class UIWindow {
      * It will call {@link #getComponent(String)} and include {@link Component#getLocalizedName()} as the parameter.
      * Can return null if the component wasn't found.
      * @param component the identifier for the component we ar searching for.
-     * @return Component - the object which was found, warning can be null!
+     * @return {@link Component} - the object which was found, warning can be null!
      * @see Component
      */
     public Component getComponent(@NotNull Component component) {
@@ -632,7 +643,7 @@ public abstract class UIWindow {
      * If the function find a component with the exact same ID it will return it.
      * Can return null if the component wasn't found.
      * @param ID the identifier for the component we ar searching for.
-     * @return Component - the object which was found, warning can be null!
+     * @return {@link Component} - the object which was found, warning can be null!
      * @see Component
      */
     public Component getComponent(@NotNull String ID) {
@@ -647,7 +658,7 @@ public abstract class UIWindow {
     }
 
     /**
-     * @return List<Component> - all components which ar used by the window.
+     * @return {@link List} - all components which ar used by the window.
      */
     public List<Component> getComponents() {
         return components;
@@ -674,7 +685,7 @@ public abstract class UIWindow {
     }
 
     /**
-     * @return boolean - true if the window was triggered to close.
+     * @return {@link Boolean} - true if the window was triggered to close.
      */
     public boolean willClose() {
         return GLFW.glfwWindowShouldClose(getOpenglID());
@@ -699,7 +710,7 @@ public abstract class UIWindow {
     }
 
     /**
-     * @return boolean - the current visible state, true if is shown.
+     * @return {@link Boolean} - the current visible state, true if is shown.
      */
     public boolean isVisible() {
         return GLFW.glfwGetWindowAttrib(getOpenglID(), GLFW.GLFW_VISIBLE) == GLFW.GLFW_TRUE;
@@ -717,7 +728,7 @@ public abstract class UIWindow {
     }
 
     /**
-     * @return boolean - current maximize state, false means it is not maximized.
+     * @return {@link Boolean} - current maximize state, false means it is not maximized.
      */
     public boolean isMaximized() {
         return GLFW.glfwGetWindowAttrib(getOpenglID(), GLFW.GLFW_MAXIMIZED) == GLFW.GLFW_TRUE;
@@ -735,7 +746,7 @@ public abstract class UIWindow {
     }
 
     /**
-     * @return boolean - current iconified state, false means it is not iconified.
+     * @return {@link Boolean} - current iconified state, false means it is not iconified.
      */
     public boolean isIconified() {
         return GLFW.glfwGetWindowAttrib(getOpenglID(), GLFW.GLFW_ICONIFIED) == GLFW.GLFW_TRUE;
@@ -753,7 +764,7 @@ public abstract class UIWindow {
     }
 
     /**
-     * @return boolean - current focused state, false means it is not focused.
+     * @return {@link Boolean} - current focused state, false means it is not focused.
      */
     public boolean isFocused() {
         return GLFW.glfwGetWindowAttrib(getOpenglID(), GLFW.GLFW_FOCUSED) == GLFW.GLFW_TRUE;
@@ -767,7 +778,7 @@ public abstract class UIWindow {
     }
 
     /**
-     * @return boolean - current always top state, false means it is not on top always.
+     * @return {@link Boolean} - current always top state, false means it is not on top always.
      */
     public boolean isAlwaysOnTop() {
         return GLFW.glfwGetWindowAttrib(getOpenglID(), GLFW.GLFW_FLOATING) == GLFW.GLFW_TRUE;
@@ -776,13 +787,15 @@ public abstract class UIWindow {
     /**
      * @param resizeable true if the window should be resized.
      */
+    @Override
     public void setResizeable(boolean resizeable) {
         GLFW.glfwSetWindowAttrib(getOpenglID(), GLFW.GLFW_RESIZABLE, resizeable ? GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
     }
 
     /**
-     * @return boolean - current resizeable state, false means it is not resizeable.
+     * @return {@link Boolean} - current resizeable state, false means it is not resizeable.
      */
+    @Override
     public boolean isResizeable() {
         return GLFW.glfwGetWindowAttrib(getOpenglID(), GLFW.GLFW_RESIZABLE) == GLFW.GLFW_TRUE;
     }
@@ -794,105 +807,105 @@ public abstract class UIWindow {
      * ######################################################################## */
 
     /**
-     * @return WindowCloseCallback - the callback if the window will close.
+     * @return {@link WindowCloseCallback} - the callback if the window will close.
      */
     public WindowCloseCallback getCloseCallback() {
         return closeCallback;
     }
 
     /**
-     * @return WindowFocusCallback - the callback if the window will change the focus state.
+     * @return {@link WindowFocusCallback} - the callback if the window will change the focus state.
      */
     public WindowFocusCallback getFocusCallback() {
         return focusCallback;
     }
 
     /**
-     * @return WindowIconifyCallback - the callback if the window change to iconified.
+     * @return {@link WindowIconifyCallback} - the callback if the window change to iconified.
      */
     public WindowIconifyCallback getIconifyCallback() {
         return iconifyCallback;
     }
 
     /**
-     * @return WindowMaximizedCallback - the callback if the window will be changed to maximized or minimized.
+     * @return {@link WindowMaximizedCallback} - the callback if the window will be changed to maximized or minimized.
      */
     public WindowMaximizedCallback getMaximizedCallback() {
         return maximizedCallback;
     }
 
     /**
-     * @return WindowPositionCallback - the callback if the window position is change. Warning update many times!
+     * @return {@link WindowPositionCallback} - the callback if the window position is change. Warning update many times!
      */
     public WindowPositionCallback getPositionCallback() {
         return positionCallback;
     }
 
     /**
-     * @return WindowSizeCallback - the callback if the window size will be change this will call too by {@link #getMaximizedCallback()}.
+     * @return {@link WindowSizeCallback} - the callback if the window size will be change this will call too by {@link #getMaximizedCallback()}.
      */
     public WindowSizeCallback getSizeCallback() {
         return sizeCallback;
     }
 
     /**
-     * @return WindowRefreshCallback - the callback if the window refreshed most call by {@link #restore()}.
+     * @return {@link WindowRefreshCallback} - the callback if the window refreshed most call by {@link #restore()}.
      */
     public WindowRefreshCallback getRefreshCallback() {
         return refreshCallback;
     }
 
     /**
-     * @return FrameBufferSizeCallback - same call at {@link #getSizeCallback()}.
+     * @return {@link FrameBufferSizeCallback} - same call at {@link #getSizeCallback()}.
      */
     public FrameBufferSizeCallback getFrameBufferSizeCallback() {
         return frameBufferSizeCallback;
     }
 
     /**
-     * @return KeyCallback - the callback if the window detect key inputs.
+     * @return {@link KeyCallback} - the callback if the window detect key inputs.
      */
     public KeyCallback getKeyCallback() {
         return keyCallback;
     }
 
     /**
-     * @return CharCallback - the callback if the window detect key inputs but its give us the right char.
+     * @return {@link CharCallback} - the callback if the window detect key inputs but its give us the right char.
      */
     public CharCallback getCharCallback() {
         return charCallback;
     }
 
     /**
-     * @return CharModsCallback - the callback if the window detect key combos like CTRL + C
+     * @return {@link CharModsCallback} - the callback if the window detect key combos like CTRL + C
      */
     public CharModsCallback getCharModsCallback() {
         return charModsCallback;
     }
 
     /**
-     * @return MouseButtonCallback - the callback if the window detect mouse button inputs.
+     * @return {@link MouseButtonCallback} - the callback if the window detect mouse button inputs.
      */
     public MouseButtonCallback getMouseButtonCallback() {
         return mouseButtonCallback;
     }
 
     /**
-     * @return MousePositionCallback - the callback if the mouse entered the window and is moving.
+     * @return {@link MousePositionCallback} - the callback if the mouse entered the window and is moving.
      */
     public MousePositionCallback getMousePositionCallback() {
         return mousePositionCallback;
     }
 
     /**
-     * @return MouseEnteredCallback - the callback if the mouse entered the window.
+     * @return {@link MouseEnteredCallback} - the callback if the mouse entered the window.
      */
     public MouseEnteredCallback getMouseEnteredCallback() {
         return mouseEnteredCallback;
     }
 
     /**
-     * @return ScrollCallback - the callback if the mouse entered the window and is scrolling.
+     * @return {@link ScrollCallback} - the callback if the mouse entered the window and is scrolling.
      */
     public ScrollCallback getScrollCallback() {
         return scrollCallback;
@@ -1180,7 +1193,7 @@ public abstract class UIWindow {
     /**
      * Private function to generate a UID for the window.
      * @param serialID wish ID can be replaced by null for {@link Class#getSimpleName()}.
-     * @return String - the free ID for this window.
+     * @return {@link String} - the free ID for this window.
      */
     private String generateSerialID(String serialID) {
         if(serialID == null) {

@@ -6,6 +6,18 @@ public class Window extends AbstractWindow {
 
     public Window(String identifier) {
         super(identifier);
+        setAllowNVG(true);
+        setRenderAtIconified(false);
+    }
+
+    @Override
+    protected void update(float delta) {
+
+    }
+
+    @Override
+    protected void render() {
+
     }
 
     @Override
