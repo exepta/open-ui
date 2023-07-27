@@ -318,6 +318,12 @@ public final class UIFactory {
      *
      * ######################################################################## */
 
+    /**
+     * Function registered a new {@link Font} by the constructor call.
+     * This is needed to save memory of the users pc.
+     * @param font the font object.
+     * @see Font
+     */
     public static void registerFont(@NotNull Font font) {
         if(hasFont(font)) {
             logger.warn("Font " + font.getName() + ", already loaded!");
@@ -327,14 +333,28 @@ public final class UIFactory {
         fonts.add(font);
     }
 
+    /**
+     * Unregistered all existing {@link Font}'s in the font {@link List}.
+     * Make this after closing the {@link OpenUI} application.
+     */
     public static void unregisterAllFonts() {
         fonts.clear();
     }
 
+    /**
+     * Function called {@link #unregisterFont(String)} to unregister the given {@link Font}.
+     * @param font the font object.
+     */
     public static void unregisterFont(@NotNull Font font) {
         unregisterFont(font.getName());
     }
 
+    /**
+     * Function to handle unregistering for {@link Font}'s. This is needed
+     * if we don't need the {@link Font} anymore. Please don't unregister the
+     * {@link Font#FALLBACK} font this can brok you application!
+     * @param name the name of the font (folder name).
+     */
     public static void unregisterFont(@NotNull String name) {
         if(!hasFont(name)) {
             logger.warn("Font " + name + ", is not loaded or registered!");
@@ -344,14 +364,29 @@ public final class UIFactory {
         fonts.remove(getFont(name));
     }
 
+    /**
+     * Function checks if the given font registered or not.
+     * @param font the font object.
+     * @return {@link Boolean} - true if the font was found.
+     */
     public static boolean hasFont(@NotNull Font font) {
         return hasFont(font.getName());
     }
 
+    /**
+     * Function checks if the given font registered or not.
+     * @param name the font name.
+     * @return {@link Boolean} - true if the font was found.
+     */
     public static boolean hasFont(@NotNull String name) {
         return getFont(name) != null;
     }
 
+    /**
+     * Function searched for a {@link Font} in the fonts {@link List} by the given name.
+     * @param name the font name.
+     * @return {@link Font} - null if the {@link Font} not found.
+     */
     public static Font getFont(@NotNull String name) {
         Font font = getFallbackFont();
         for(Font entries : fonts) {
@@ -363,10 +398,16 @@ public final class UIFactory {
         return font;
     }
 
+    /**
+     * @return {@link Font} - the {@link Font#FALLBACK} font.
+     */
     public static Font getFallbackFont() {
         return Font.FALLBACK;
     }
 
+    /**
+     * @return {@link List} - the complete {@link Font} {@link List}.
+     */
     public static List<Font> getFonts() {
         return fonts;
     }
