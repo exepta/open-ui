@@ -212,5 +212,8 @@ public class Font {
         this.updated = true;
     }
 
+    /**
+     * Static variant of {@link Font} as Fallback.
+     */
     public static final Font FALLBACK = new Font(UIUtils.internalPath("assets/font/"), "Fallback");
 }
