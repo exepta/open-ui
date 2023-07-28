@@ -1,9 +1,12 @@
 package net.exsource.open.logic.renderer;
 
+import net.exsource.open.ErrorHandler;
 import net.exsource.open.annotation.component.SetComponentWindow;
+import net.exsource.open.enums.Errors;
 import net.exsource.open.logic.AbstractRenderer;
 import net.exsource.open.ui.UIWindow;
 import net.exsource.open.ui.component.Component;
+import net.exsource.open.ui.component.layout.Layout;
 import net.exsource.openlogger.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,6 +31,11 @@ public abstract class UIRenderer extends AbstractRenderer {
             toQue(component);
         }
 
+        for(Component layouts : loadedComponents) {
+            if(layouts instanceof Layout layout) {
+                layout.update();
+            }
+        }
         render(loadedComponents);
     }
 
@@ -44,7 +52,11 @@ public abstract class UIRenderer extends AbstractRenderer {
         }
         loadedComponents.add(component);
         try {
-            Class<?> object = component.getClass().getSuperclass();
+            Class<?> object = getParentClass(component.getClass());
+            if(object == null) {
+                ErrorHandler.handle(Errors.UI_NO_COMPONENT);
+                return;
+            }
             Field field = object.getDeclaredField("window");
             if(field.isAnnotationPresent(SetComponentWindow.class)) {
                 field.setAccessible(true);
@@ -71,5 +83,15 @@ public abstract class UIRenderer extends AbstractRenderer {
             }
         }
         return state;
+    }
+
+    private Class<?> getParentClass(Class<?> object) {
+        if(!object.getSimpleName().equals("Component")) {
+            if(object.getSimpleName().equalsIgnoreCase("Object")) {
+                return null;
+            }
+            return getParentClass(object.getSuperclass());
+        }
+        return object;
     }
 }
