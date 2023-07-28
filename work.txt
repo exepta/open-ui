@@ -1,0 +1,17 @@
+####################################################
+#                                                  #
+#                    Component                     #
+#                                                  #
+####################################################
+TODO:
+    - Needed Alignment system for parent and child components. This will be handled by the component itself.
+    - Css styling support for general thinks like (Background, Border, Margin/Padding or Width/Height)
+
+####################################################
+#                                                  #
+#                      Layout                      #
+#                                                  #
+####################################################
+TODO:
+    - Write default logic for layouts to handle ui overlapping. This doesn't need to be careful or something
+      it can be render like simple space by space. NOT COMPLEX!
