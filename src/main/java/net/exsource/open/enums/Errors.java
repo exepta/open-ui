@@ -6,6 +6,7 @@ public enum Errors {
     NO_MAIN(14136, true, "There was no main located by execution try of OpenUI!"),
     WINDOW_GENERATION_FAILED(2376, true, "There was a generation error by try to generate a new window!"),
     WINDOW_NOT_CONTAINS_NVG(2314314, true, "The given window doesn't contains a NanoVG context!"),
+    UI_NO_COMPONENT(21143, true, "The given ui element dosen't extended Component.class!"),
     GLFW_INIT(739, true, "There was no glfw context in the current thread or it can't be initialize glfw!");
 
     private final int id;
