@@ -2,6 +2,7 @@ package net.exsource.open;
 
 import net.exsource.open.ui.UIWindow;
 import net.exsource.open.ui.font.Font;
+import net.exsource.open.ui.modals.Image;
 import net.exsource.open.ui.windows.Window;
 import net.exsource.openlogger.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +35,7 @@ public final class UIFactory {
     private static final Map<String, Thread> threads = new HashMap<>();
 
     private static final List<Font> fonts = new ArrayList<>();
+    private static final List<Image> images = new ArrayList<>();
 
     /* ########################################################################
      *
@@ -318,6 +320,10 @@ public final class UIFactory {
      *
      * ######################################################################## */
 
+    /* ##################################
+     *              Fonts
+     * ################################## */
+
     /**
      * Function registered a new {@link Font} by the constructor call.
      * This is needed to save memory of the users pc.
@@ -410,5 +416,64 @@ public final class UIFactory {
      */
     public static List<Font> getFonts() {
         return fonts;
+    }
+
+    /* ##################################
+     *              Image
+     * ################################## */
+
+    public static void registerImage(@NotNull Image image) {
+        if(hasImage(image)) {
+            logger.warn("Image " + image.getName() + ", already loaded!");
+            return;
+        }
+
+        logger.debug("Image " + image.getName() + ", successfully registered!");
+        images.add(image);
+    }
+
+    public static void unregisterAllImages() {
+        images.clear();
+    }
+
+    public static void unregisterImage(@NotNull Image image) {
+        unregisterImage(image.getName());
+    }
+
+    public static void unregisterImage(@NotNull String name) {
+        if(!hasImage(name)) {
+            logger.warn("Image " + name + ", not loaded!");
+            return;
+        }
+
+        logger.debug("Image " + name + ", successfully unregistered!");
+        images.remove(getImage(name));
+    }
+
+    public static boolean hasImage(@NotNull Image image) {
+        return hasImage(image.getName());
+    }
+
+    public static boolean hasImage(@NotNull String name) {
+        return getImage(name) != null;
+    }
+
+    public static Image getImage(@NotNull String name) {
+        Image image = getFallbackImage();
+        for(Image entries : images) {
+            if(entries.getName().equals(name)) {
+                image = entries;
+                break;
+            }
+        }
+        return image;
+    }
+
+    public static Image getFallbackImage() {
+        return Image.FALLBACK;
+    }
+
+    public static List<Image> getImages() {
+        return images;
     }
 }

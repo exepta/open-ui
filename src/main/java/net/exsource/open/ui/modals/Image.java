@@ -1,5 +1,6 @@
 package net.exsource.open.ui.modals;
 
+import net.exsource.open.UIFactory;
 import net.exsource.openlogger.Logger;
 import net.exsource.openutils.tools.Commons;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +21,6 @@ import java.util.Map;
  * @since 1.0.0
  * @author Daniel Ramke
  */
-@Deprecated
 public class Image {
 
     private final Logger logger = Logger.getLogger();
@@ -38,6 +38,8 @@ public class Image {
 
     private float alpha;
 
+    private boolean initialize;
+
     /**
      * Constructor creates an image object which stored the needed information.
      * The constructor can't create the needed id.
@@ -50,11 +52,12 @@ public class Image {
         this.type = Commons.getFileType(path);
         if(!checkFormat()) {
             logger.error("Doesn't support " + type + ", as valid format!");
-            //Todo: use fallback image!
             return;
         }
         this.setAlpha(1.0f);
         this.createInformation();
+        initialize = true;
+        UIFactory.registerImage(this);
     }
 
     /**
@@ -188,6 +191,10 @@ public class Image {
         return !gl_func_id_list.isEmpty();
     }
 
+    public boolean isInitialize() {
+        return initialize;
+    }
+
     /**
      * @return String - the file extension which defined the image format.
      */
@@ -251,6 +258,9 @@ public class Image {
             image = new Image(path);
             image.setAlpha(alpha);
         }
+        if(!image.isInitialize())
+            image = FALLBACK;
+
         return image;
     }
 
@@ -270,7 +280,12 @@ public class Image {
      * @return Image the founded image can be null!
      */
     public static Image get(@NotNull String name) {
-        return null;
+        return UIFactory.getImage(name);
     }
+
+    /**
+     * Static variant of {@link Image} as Fallback.
+     */
+    public static Image FALLBACK = new Image(""); //Todo: set a image.
 
 }
