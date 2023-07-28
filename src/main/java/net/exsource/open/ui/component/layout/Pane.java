@@ -22,6 +22,6 @@ public class Pane extends Layout {
 
     @Override
     protected void logic() {
-        //Todo: display child components in a row...
+
     }
 }
