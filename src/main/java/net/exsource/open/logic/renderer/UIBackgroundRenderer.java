@@ -25,7 +25,7 @@ public class UIBackgroundRenderer extends UIRenderer {
     public void render(@NotNull List<Component> components) {
         components.forEach(component -> {
             Background background = component.getStyle().getBackground();
-            handler.draw(component.getAbsoluteX(), component.getAbsoluteY(), component.getWidth(), component.getHeight(), background);
+            handler.draw(component.getPositionX(), component.getPositionY(), component.getWidth(), component.getHeight(), background);
         });
     }
 }

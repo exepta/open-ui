@@ -32,9 +32,7 @@ public abstract class Component {
     private int height;
 
     private int positionX;
-    private int absoluteX;
     private int positionY;
-    private int absoluteY;
 
     private final List<Component> children;
     private Component parent;
@@ -213,52 +211,6 @@ public abstract class Component {
      */
     public int getPositionY() {
         return positionY;
-    }
-
-    /**
-     * Function to set the x and y absolute position.
-     * @param absoluteX the new x absolute position.
-     * @param absoluteY the new y absolute position.
-     */
-    public void setAbsolute(int absoluteX, int absoluteY) {
-        this.setPositionX(positionX);
-        this.setPositionY(positionY);
-    }
-
-    /**
-     * Function to set the x and y absolute position.
-     * @param absolute the new x and y absolute position.
-     */
-    public void setAbsolute(int absolute) {
-        this.setAbsolute(absolute, absolute);
-    }
-
-    /**
-     * @param absoluteX set new x absolute position.
-     */
-    public void setAbsoluteX(int absoluteX) {
-        this.absoluteX = absoluteX;
-    }
-
-    /**
-     * @return int - the current x absolute position.
-     */
-    public int getAbsoluteX() {
-        return absoluteX;
-    }
-
-    /**
-     * @param absoluteY set new y absolute position.
-     */
-    public void setAbsoluteY(int absoluteY) {
-        this.absoluteY = absoluteY;
-    }
-
-    /**
-     * @return int - the current y absolute position.
-     */
-    public int getAbsoluteY() {
-        return absoluteY;
     }
 
     /**
