@@ -28,4 +28,7 @@ public class Style {
     @Builder.Default
     private Insets margin = new Insets(0);
 
+    @Builder.Default
+    private String position = "relative";
+
 }
