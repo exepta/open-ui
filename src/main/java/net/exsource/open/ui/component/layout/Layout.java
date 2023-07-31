@@ -3,6 +3,10 @@ package net.exsource.open.ui.component.layout;
 import net.exsource.open.logic.renderer.UIRenderer;
 import net.exsource.open.ui.UIWindow;
 import net.exsource.open.ui.component.Component;
+import net.exsource.open.ui.style.Style;
+import net.exsource.open.ui.style.generic.Background;
+import net.exsource.openutils.enums.Colors;
+import net.exsource.openutils.tools.Color;
 
 /**
  * Class for default layout functions and indicate as {@link Layout} for the {@link UIRenderer}.
@@ -13,8 +17,6 @@ import net.exsource.open.ui.component.Component;
  */
 public abstract class Layout extends Component {
 
-    protected boolean useDefaultLogic;
-
     /**
      * Constructor to initialize a new {@link Layout} for the extended class.
      * This is a super constructor for your own class to create a new {@link Layout}.
@@ -22,7 +24,7 @@ public abstract class Layout extends Component {
      */
     public Layout(String localizedName) {
         super(localizedName);
-        this.useDefaultLogic = true;
+        getStyle().setBackground(Background.get(Color.named(Colors.LIGHTGRAY)));
     }
 
     /**
@@ -38,23 +40,29 @@ public abstract class Layout extends Component {
      * is already called at {@link UIRenderer#render(UIWindow)} all time.
      */
     public void update() {
-        defaultLogic();
+        holdComponentsInBound();
         logic();
     }
 
-    /**
-     * @return {@link Boolean} - current state if the layout used defaults or not.
-     */
-    public boolean isUseDefaultLogic() {
-        return useDefaultLogic;
-    }
+    private void holdComponentsInBound() {
+        for(Component component : getChildren()) {
+            Style style = component.getStyle();
+            if(style.getPosition().equalsIgnoreCase("absolute")
+                    || style.getPosition().equalsIgnoreCase("fixed"))
+                continue;
 
-    /**
-     * Private function to calculate a simple row system as default {@link Layout} func.
-     */
-    private void defaultLogic() {
-        if(useDefaultLogic) {
+            int currentX_Width = component.getPositionX() + component.getWidth();
+            int currentY_Height = component.getPositionY() + component.getHeight();
 
+            if(currentX_Width > getWidth()) {
+                int correctPos = (getWidth() - component.getWidth());
+                component.setPositionX(correctPos);
+            }
+
+            if(currentY_Height > getHeight()) {
+                int correctPos = (getHeight() - component.getHeight());
+                component.setPositionY(correctPos);
+            }
         }
     }
 }
